@@ -2,18 +2,26 @@
 #include <stdlib.h>
 #include"student.h"
 #include"Admin.h"
+
 int main()
 {
-    int mode = began();
+    int mode = begin();
 
-    student_info *st;
+   struct student_info *st = NULL;
+    //add_student(&st);
     switch(mode)
     {
     case 1:
-     admin();
+         int ch = login();
+    if(ch == 0)
+    {
+        printf("\n\t\t\t        Failed login :(\n");
+        return 0;
+    }
+     admin(&st);
      break;
     case 2:
-     student();
+     //student();
      break;
     }
 }
