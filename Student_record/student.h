@@ -1,7 +1,7 @@
 #ifndef STUDENT_H_INCLUDED
 #define STUDENT_H_INCLUDED
 
-typedef struct
+ struct student_info
 {
     char *name;
     char *pass;
@@ -9,6 +9,7 @@ typedef struct
     char gender[10];
     int grade;
     int id;
-}student_info;
+    struct student_info *link;
+};
 
 #endif // STUDENT_H_INCLUDED
