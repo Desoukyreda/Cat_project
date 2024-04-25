@@ -7,15 +7,24 @@
 
 
 enum {false,true}flag;
-const char default_pass[5] = "1234";
+ char default_pass[MAX_PASSWORD_SIZE] ="1234";
 
 static char *pass_admin;
 static int size_of_student = 0;
 
-
 int begin()
 {
-printf("___________ Student Record System ___________");
+     printf("\n\n");
+    printf("\n\t\t\t        *************************************");
+    printf("\n\t\t\t        *               WELCOME             *");
+    printf("\n\t\t\t        *                  TO               *");
+    printf("\n\t\t\t        *            Student Record         *");
+    printf("\n\t\t\t        *              MANAGEMENT           *");
+    printf("\n\t\t\t        *                SYSTEM             *");
+    printf("\n\t\t\t        *************************************");
+    printf("\n\n");
+
+//printf("___________ Student Record System ___________");
     printf("\n\nChoose your mode : \n");
     printf("1- Admin mode \n");
     printf("2- Student mode \n");
@@ -31,9 +40,44 @@ printf("___________ Student Record System ___________");
     return choose;
 }
 
+void add_default_adminpass_infile()
+{
+    FILE *f =fopen("admin_pass.txt","r");
+    if(f!=NULL)
+    {
+        fscanf(f,"Admin_pass : %s",default_pass);
+        fclose(f);
+    }else
+    {
+        FILE *f_p = fopen("admin_pass.txt","w");
+
+    if(f_p == NULL)
+    {
+        printf("\nCan't open file :(\n");
+
+    }else
+    {
+    fprintf(f_p,"Admin_pass : %s","1234");
+    fclose(f_p);
+    }
+    }
+
+
+}
 
 int login ()
 {
+    FILE *f_ptr = fopen("admin_pass.txt","r");
+    if(f_ptr == NULL)
+    {
+        printf("\nCan't open file :(\n");
+
+    }else
+    {
+    fscanf(f_ptr,"Admin_pass : %s",default_pass);
+    fclose(f_ptr);
+    }
+
   char pass [MAX_PASSWORD_SIZE];
 
 int check = 0;
@@ -325,6 +369,76 @@ head = NULL;
 ptr =NULL;
 }
 
+void ViewAllRecords(struct student_info *head){
+   struct student_info* current = head;
+    if (current == NULL) {
+         printf("\n\t\t\t        =-=-=-=-=-=-=-=\n");
+        printf("\n\t\t\t        THERE IS NO STUDENTS TO VIEW\n\n");
+    } else {
+
+        while (current!= NULL) {
+             printf("\n\t\t        *********\n");
+            printf("\n\t\t        Stud name is: %s \n",current->name);
+             printf("\n\t\t        Stud age is: %d \n",current->age);
+            printf("\n\t\t        Stud ID is: %d \n",current->id);
+            printf("\n\t\t        Stud total grade is: %d\n",current->grade);
+            printf("\n\t\t        Stud gender is: %s \n",current->gender);
+            printf("\n\t\t        **********\n");
+            current = current->link;
+        }
+    }
+}
+
+    void EditAdminPassword(struct student_info **head)
+{
+    char newpass[MAX_PASSWORD_SIZE] ;
+     printf("\n\t\t        Please enter your new password :\n");
+    printf("\n\t\t        ");
+    scanf("%s", newpass);
+  pass_admin = (char*)malloc(strlen(newpass)+1);
+  strcpy(pass_admin,newpass);
+
+  FILE *f_p = fopen("admin_pass.txt","w");
+    if(f_p == NULL)
+    {
+        printf("\nCan't open file :(\n");
+        return;
+    }
+    fprintf(f_p,"Admin_pass : %s",pass_admin);
+    fclose(f_p);
+    free(pass_admin);
+    pass_admin = NULL;
+     printf("\n\t\t       your password have changed successfully! \n");
+
+
+}
+
+void Editstudentgrade(struct student_info **head){
+    int ID;
+     int newGrade;
+     printf("Enter student ID: ");
+    scanf("%d",&ID );
+    printf("Enter new grade 'between 0 and 100': ");
+    scanf("%d", &newGrade);
+
+    struct student_info* current = *head;
+    while(current != NULL) {
+        if (current->id == ID) {
+
+            if (newGrade >= 0 && newGrade <= 100) {
+                current->grade = newGrade;
+                printf("Grade for student with ID %d has been updated to %d\n", ID, newGrade);
+                return;
+            } else {
+                printf("Error: Grade should be between 0 and 100.\n");
+                return;
+            }
+        }
+        current = current->link;
+    }
+    printf("Student with ID %d not found.\n", ID);
+}
+
 void admin(struct student_info **head){
 
 
@@ -353,13 +467,13 @@ void admin(struct student_info **head){
             view_student_record(*head);
             break;
         case 4:
-            //ViewAllRecords();
+            ViewAllRecords(*head);
             break;
         case 5:
-            //EditAdminPassword();
+            EditAdminPassword(head);
             break;
         case 6:
-           // Editstudentgrade();
+            Editstudentgrade(head);
             break;
         case 7:
            save_data(*head);

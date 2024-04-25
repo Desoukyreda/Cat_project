@@ -5,13 +5,13 @@
 
 int main()
 {
-    int mode = begin();
 
+    int mode = begin();
    struct student_info *st = NULL;
-    //add_student(&st);
     switch(mode)
     {
     case 1:
+        add_default_adminpass_infile();
          int ch = login();
     if(ch == 0)
     {
@@ -25,3 +25,4 @@ int main()
      break;
     }
 }
+
