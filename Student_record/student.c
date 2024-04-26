@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
-#include"header.h"
+#include"student.h"
 #include"Admin.h"
-/*#define MAX_NAME_SIZE 51
+#define MAX_NAME_SIZE 51
 #define MAX_PASSWORD_SIZE 11
 #define MAX_GRADE 100
 #define MIN_GRADE 0
 struct node *ptr2 ;
 static int option,ID;
-static int check_ID;*/
+static int check_ID;
 /*========================================================================================================================================================*/
   struct node * creatnode(struct info data){
 
@@ -83,11 +83,9 @@ void savedata2(struct node *ptr)
 /*==========================================================================================================================================================*/
 
 
- void idcheck(void){
+ void idcheck(int ID){
      Mylabel:
-    printf("Enter your ID:\n");
-    scanf("%d",&ID);
-    check_ID = check(*ptr2,ID);
+    int check_ID = check(*ptr2,ID);
     if( check_ID ==0){
         printf(" 'Incorrect ID... Try again'\n ");
    } else
@@ -145,7 +143,8 @@ void savedata2(struct node *ptr)
   }
 /*==========================================================================================================================================================*/
 int student()
-{  struct node *ptr,*ptr3;
+{  int ID;
+   struct node *ptr,*ptr3;
    struct node * linkedlist =NULL;
    readFormFile("input.txt",&linkedlist);
    //=================inserting information from file.======================//
@@ -159,7 +158,9 @@ int student()
     printf("Choose what you want to do:\n");
     printf(" 1-View your record\n 2-Edit your password\n 3-Edit your name\n ");
     scanf("%d",&option);
-     idcheck();
+    printf("Enter your ID:\n");
+    scanf("%d",&ID);
+     idcheck(ID);
 
     switch(option){
     case 1:
