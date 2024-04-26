@@ -1,11 +1,10 @@
 #ifndef ADMIN_H_INCLUDED
 #define ADMIN_H_INCLUDED
-
 #define MAX_NAME_SIZE 51
 #define MAX_PASSWORD_SIZE 11
 #define MAX_GRADE 100
 #define MIN_GRADE 0
-/*
+*/
 =======
 #define stringsize 30
 #define default_pass 1234
@@ -15,7 +14,7 @@
 #define MAX_GRADE 100
 #define MIN_GRADE 0
 */
-
+//====================================================ADMIN FUNCTIONS PROTOTYBES=============================================================================/
 int begin();
 int login();
 int check(struct student_info *,int );
@@ -31,3 +30,5 @@ void EditAdminPassword(struct student_info **);
 void Editstudentgrade(struct student_info **);
 void add_default_adminpass_infile();
 #endif // ADMIN_H_INCLUDED
+
+
