@@ -4,24 +4,27 @@
 #include<string.h>
 #include<stdio.h>
 #include<conio.h>
+/* #define MAX_NAME_SIZE 51
+   #define MAX_PASSWORD_SIZE 11
+   #define MAX_GRADE 100
+   #define MIN_GRADE 0 */
 
-
-enum {false,true}flag;
- char default_pass[MAX_PASSWORD_SIZE] ="1234";
+ enum {false,true}flag;
+ char default_pass[MAX_PASSWORD_SIZE] = "1234";
 
 static char *pass_admin;
-static int size_of_student = 0;
-
+int size_of_student = 0;
+//==========================================================================================================================================================/
 int begin()
 {
      printf("\n\n");
-    printf("\n\t\t\t        *************************************");
-    printf("\n\t\t\t        *               WELCOME             *");
-    printf("\n\t\t\t        *                  TO               *");
-    printf("\n\t\t\t        *            Student Record         *");
-    printf("\n\t\t\t        *              MANAGEMENT           *");
-    printf("\n\t\t\t        *                SYSTEM             *");
-    printf("\n\t\t\t        *************************************");
+    printf("\n\t\t\t\t        *************************************");
+    printf("\n\t\t\t\t        *               WELCOME             *");
+    printf("\n\t\t\t\t        *                  TO               *");
+    printf("\n\t\t\t\t        *            Student Record         *");
+    printf("\n\t\t\t\t        *              MANAGEMENT           *");
+    printf("\n\t\t\t\t        *                SYSTEM             *");
+    printf("\n\t\t\t\t        *************************************");
     printf("\n\n");
 
 //printf("___________ Student Record System ___________");
@@ -39,7 +42,7 @@ int begin()
 
     return choose;
 }
-
+//==========================================================================================================================================================/
 void add_default_adminpass_infile()
 {
     FILE *f =fopen("admin_pass.txt","r");
@@ -64,7 +67,7 @@ void add_default_adminpass_infile()
 
 
 }
-
+//==========================================================================================================================================================/
 int login ()
 {
     FILE *f_ptr = fopen("admin_pass.txt","r");
@@ -111,7 +114,7 @@ printf("\n\nHi admin \n");
     printf("Try again in later time :(");
     return false ;
 }
-
+//==========================================================================================================================================================/
 
 int check(struct student_info *ptr,int id)
 {
@@ -134,7 +137,7 @@ int check(struct student_info *ptr,int id)
     }
     return false;
 }
-
+//==========================================================================================================================================================/
 static int i = 0;
 
 void add_student(struct student_info **head)
@@ -190,7 +193,7 @@ void add_student(struct student_info **head)
              ch = check(*head,id);
             if(ch!=0)
             {
-                printf("\nThis ID %d already exist .. Try again :(\n",ptr->id);
+                printf("\nThis ID %d already exist .. Try again :(\n",id);
             }else ptr->id =id;
         }while(ch!=0);
 
@@ -222,7 +225,7 @@ void add_student(struct student_info **head)
 }
 
 
-
+//==========================================================================================================================================================/
 
 void view_student_record(struct student_info *ptr)
 {
@@ -260,7 +263,7 @@ void view_student_record(struct student_info *ptr)
 
 }
 
-
+//==========================================================================================================================================================/
 void remove_first(struct student_info **ptr)
 {
     struct student_info *temp = *ptr;
@@ -269,7 +272,7 @@ void remove_first(struct student_info **ptr)
     free(temp);
     temp = NULL;
 }
-
+//==========================================================================================================================================================/
 void remove_student(struct student_info **head)
 {
 
@@ -337,7 +340,7 @@ void remove_student(struct student_info **head)
     size_of_student--;
     printf("\nDone removing\n");
 }
-
+//==========================================================================================================================================================/
 void save_data(struct student_info *ptr)
 {
     FILE *f_ptr = fopen("input.txt","w");
@@ -355,7 +358,7 @@ void save_data(struct student_info *ptr)
     fclose(f_ptr);
     printf("\nDone saving\n");
 }
-
+//==========================================================================================================================================================/
 void tofree(struct student_info **head)
 {
     struct student_info *ptr = *head;
@@ -368,7 +371,7 @@ void tofree(struct student_info **head)
 head = NULL;
 ptr =NULL;
 }
-
+//==========================================================================================================================================================/
 void ViewAllRecords(struct student_info *head){
    struct student_info* current = head;
     if (current == NULL) {
@@ -388,7 +391,7 @@ void ViewAllRecords(struct student_info *head){
         }
     }
 }
-
+//==========================================================================================================================================================/
     void EditAdminPassword(struct student_info **head)
 {
     char newpass[MAX_PASSWORD_SIZE] ;
@@ -412,7 +415,7 @@ void ViewAllRecords(struct student_info *head){
 
 
 }
-
+//==========================================================================================================================================================/
 void Editstudentgrade(struct student_info **head){
     int ID;
      int newGrade;
@@ -438,7 +441,7 @@ void Editstudentgrade(struct student_info **head){
     }
     printf("Student with ID %d not found.\n", ID);
 }
-
+//==========================================================================================================================================================/
 void admin(struct student_info **head){
 
 
@@ -487,3 +490,4 @@ void admin(struct student_info **head){
         }
   admin(head);
     }
+//==========================================================================================================================================================/
