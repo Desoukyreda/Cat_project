@@ -21,7 +21,7 @@ int main()
      admin(&st);
      break;
     case 2:
-     //student();
+     student();
      break;
     }
 }

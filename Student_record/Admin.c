@@ -7,7 +7,7 @@
 
 
 enum {false,true}flag;
- char default_pass[MAX_PASSWORD_SIZE] ="1234";
+char default_pass[MAX_PASSWORD_SIZE] ="1234";
 
 static char *pass_admin;
 static int size_of_student = 0;
@@ -135,18 +135,18 @@ int check(struct student_info *ptr,int id)
     return false;
 }
 
-static int i = 0;
+//static int i = 0;
 
 void add_student(struct student_info **head)
 {
 
     struct student_info *ptr = *head;
-    if(i==0)
+    if(*head == NULL)
     {
         *head = (struct student_info *)malloc(sizeof(struct student_info));
         (*head)->link = NULL;
         ptr = *head;
-    i++;
+    //i++;
     }else
     {
 
@@ -248,7 +248,7 @@ void view_student_record(struct student_info *ptr)
         }
     }
 
-    printf("\n\tFor student : %s\n",ptr->name);
+    printf("\nFor student : %s\n",ptr->name);
     printf("Password : %s\n",ptr->pass);
     printf("Age : %d\n",ptr->age);
     printf("Total grade : %d\n",ptr->grade);
@@ -261,15 +261,6 @@ void view_student_record(struct student_info *ptr)
 }
 
 
-void remove_first(struct student_info **ptr)
-{
-    struct student_info *temp = *ptr;
-    *ptr = (*ptr)->link;
-    temp->id = -1e5;
-    free(temp);
-    temp = NULL;
-}
-
 void remove_student(struct student_info **head)
 {
 
@@ -277,55 +268,37 @@ void remove_student(struct student_info **head)
     {
         printf("\nThere is no student To remove \n");
     return;
-    }else if(size_of_student == 1)
-    {
-        int id;
-    printf("enter ID : ");
-    scanf("%d",&id);
-   int ch = check(*head,id);
-   if(ch > 0)
-   {
-       (*head)->id = -1e5;
-        free(*head);
-        *head = NULL;
-        i--;
-        size_of_student--;
-        printf("\nDone removing\n");
-   }else
-   {
-       printf("\nThere isn't exist any student with this ID :(\n");
-   }
-        return;
     }
 
-    struct student_info *current = (*head)->link;
-    struct student_info *ptr =*head;
+    struct student_info *current = (*head);
+    struct student_info *ptr = NULL;
+
     int id;
     printf("enter ID : ");
     scanf("%d",&id);
    int ch = check(*head,id);
    if(ch > 0)
    {
-       if(ch==1)
-       {
-           remove_first(head);
-           size_of_student--;
-           printf("\nDone removing\n");
-           return;
-       }
-
     while(current!=NULL)
     {
         if(current->id == id)
         {
-            (ptr)->link = current->link ;
+            if(ch==1)
+            {
+                (*head) = current->link;
+
+            }else
+            {
+               (ptr)->link = current->link ;
+            }
+
             current->id = -1e5;
             free(current);
             current = NULL;
             break;
         }else
         {
-            ptr = ptr->link;
+            ptr = current;
             current = current->link;
         }
     }
@@ -346,10 +319,10 @@ void save_data(struct student_info *ptr)
         printf("\nCan't open a file :(\n");
         return;
     }
-    fprintf(f_ptr,"St info :name , password , ID , age , grade , gender .\n");
+   // fprintf(f_ptr,"St info :name , password , ID , age , grade , gender .\n");
     while(ptr!=NULL)
     {
-        fprintf(f_ptr,"%s,%s,%d,%d,%d,%s\n",ptr->name,ptr->pass,ptr->id,ptr->age,ptr->grade,ptr->gender);
+        fprintf(f_ptr,"%s,%s,%d,%d,%s,%d\n",ptr->name,ptr->pass,ptr->id,ptr->age,ptr->gender,ptr->grade);
         ptr = ptr->link;
     }
     fclose(f_ptr);
