@@ -1,7 +1,7 @@
 #ifndef STUDENT_H_INCLUDED
 #define STUDENT_H_INCLUDED
 
- struct student_info
+struct student_info
 {
     char *name;
     char *pass;
@@ -12,29 +12,17 @@
     struct student_info *link;
 };
 
-struct info{
 
-    char *name;
-    char *pass;
-    int age;
-    char gender[10];
-    int grade;
-    int id;
-};
- struct node
-{
-    struct info data;
-    struct node*next;
-};
  //===========================================================FUNCTIONS PROTOTYPES=========================================================================/
-  int idcheck(struct node*);
-  void viewfunc( struct node *ptr2,int);
-  void edit_pass_func( struct node *ptr2,int );
-  void edit_name_func(struct node *ptr2,int);
-  struct node * creatnode(struct info data);
-  void insertnode(struct node **head,struct info data);
-  void freeList( struct node **head );
-  void readFormFile(struct node **head);
-  void savedata2(struct node *ptr);
+  int id_pass_check(struct student_info*);
+  void viewfunc( struct student_info *ptr2,int);
+  void edit_pass_func( struct student_info *ptr2,int );
+  void edit_name_func(struct student_info *ptr2,int);
+
+  struct student_info* insertnode(struct student_info **head);
+
+  void readFormFile(struct student_info **head);
+  int pass_check(struct student_info *,char *);
+
   int student();
 #endif // STUDENT_H_INCLUDED

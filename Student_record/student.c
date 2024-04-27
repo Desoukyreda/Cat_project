@@ -2,48 +2,40 @@
 #include <stdlib.h>
 #include<string.h>
 #include"student.h"
-#include"Admin.h"
+#include"methods.h"
 
-
+enum {false,true};
 static int option,ID;
-static int check_ID;
-//========================================================================================================================================================/
-  struct node * creatnode(struct info data){
+static int check_ID,check_pass;
 
-  struct node* newnode=(struct node *)malloc(sizeof(struct node));
-  newnode -> data=data;
-  newnode ->next=NULL;
-  return newnode;
-
-  };
 //==========================================================================================================================================================/
-  void insertnode(struct node **head,struct info data){
-    struct node *newnode = creatnode(data);
-    if(*head ==NULL){
-        *head=newnode;
 
-        return;
+  struct student_info * insertnode(struct student_info **head){
+    struct student_info *ptr = *head;
+    if(*head == NULL)
+    {
+        *head = (struct student_info *)malloc(sizeof(struct student_info));
+        (*head)->link = NULL;
+        ptr = *head;
+
+    }else
+    {
+
+     struct student_info *current = (struct student_info *)malloc(sizeof(struct student_info));
+     current->link = NULL;
+
+     while(ptr->link!=NULL)ptr = ptr->link;
+
+        ptr->link = current;
+
+     ptr = current;
     }
-     struct node* current = *head;
-     while(current -> next != NULL){
-        current = current->next;
-     }
-     current->next =newnode;
-
+    return ptr;
   }
 
 //==========================================================================================================================================================/
-   void freeList( struct node **head ){
-     struct node * current = *head;
-     while( current != NULL){
-     struct node * next =current-> next;
-        free(current);
-        current=next;
-     }
-        *head=NULL;}
 
-//==========================================================================================================================================================/
-  void readFormFile(struct node **head){
+  void readFormFile(struct student_info **head){
 
    FILE *file =fopen("input.txt","r");
    if(file ==NULL){
@@ -51,45 +43,32 @@ static int check_ID;
      return;
    }
 
-   struct info data;
-   char name[50],pass[MAX_PASSWORD_SIZE];
-   char gender[10];
-   while(fscanf(file,"%51[^,],%11[^,],%d,%d,%9[^,],%d\n",name,pass,&data.id,&data.age,data.gender,&data.grade) != EOF){
 
-     data.name = (char *)malloc(strlen(name)+1);
-     strcpy(data.name,name);
-     data.pass = (char *)malloc(strlen(pass)+1);
-     strcpy(data.pass,pass);
-      insertnode(head,data);
+   struct student_info *data;
+   int id,age,grade;
+   char name[MAX_NAME_SIZE],pass[MAX_PASSWORD_SIZE];
+   char gender[10];
+   while(fscanf(file,"%51[^,],%11[^,],%d,%d,%9[^,],%d\n",name,pass,&id,&age,gender,&grade) != EOF){
+     data = insertnode(head);
+     data->id = id;
+     data->age = age;
+     data->grade = grade;
+     data->name = (char *)malloc(strlen(name)+1);
+     strcpy(data->name,name);
+     data->pass = (char *)malloc(strlen(pass)+1);
+     strcpy(data->pass,pass);
+
+     strcpy(data->gender,gender);
    }
 
    fclose(file);
 
   }
-//==========================================================================================================================================================/
-void savedata2(struct node *ptr)
-{
-    FILE *f_ptr = fopen("input.txt","w");
-    if(f_ptr==NULL)
-    {
-        printf("\nCan't open a file :(\n");
-        return;
-    }
-
-    while(ptr!=NULL)
-    {
-        fprintf(f_ptr,"%s,%s,%d,%d,%s,%d\n",ptr->data.name,ptr->data.pass,ptr->data.id,ptr->data.age,ptr->data.gender,ptr->data.grade);
-        ptr = ptr->next;
-    }
-    fclose(f_ptr);
-    printf("\nDone saving\n");
-}
-
 
 //==========================================================================================================================================================/
-int check2(struct node *ptr,int id)
-{
-    if( ptr == NULL )
+ int pass_check(struct student_info *ptr,char *pass)
+ {
+     if( ptr == NULL )
     {
         printf("\nThere isn't exist any student :(\n");
         return 0;
@@ -97,92 +76,105 @@ int check2(struct node *ptr,int id)
     int i = 1;
     while(ptr!=NULL)
     {
-        if(ptr->data.id == id )
+        if(!strcmp(ptr->pass,pass))
         {
-            return i;
+            return true;
         }else
         {
-            ptr = ptr->next;
+            ptr = ptr->link;
             i++;
         }
     }
-    return 0;
-}
+    return false;
+ }
 
-
- int idcheck(struct node *head){
+ int id_pass_check(struct student_info *head){
    int id;
     printf("Enter your ID : ");
     scanf("%d",&id);
-    check_ID = check2(head,id);
-    if( check_ID ==0){
-        printf(" 'Incorrect ID... Try again'\n ");
+    check_ID = check(head,id);
+    if( check_ID == false){
+        printf("\n 'Incorrect ID... Try again'\n ");
         return 0;
     }else
-    return id;
+    {
+      char pass[MAX_PASSWORD_SIZE];
+    printf("Enter your password : ");
+    scanf("%s",pass);
+    check_pass = pass_check(head,pass);
+    if(check_pass == true){
+        printf("\nDone login..\n\n");
+        return id;
+    }else
+    {
+        printf("\n 'Incorrect password... Try again'\n ");
+        return false;}
+
+    }
+
  }
 //==========================================================================================================================================================/
- void viewfunc(struct node *ptr2,int id){
+ void viewfunc(struct student_info *ptr2,int id){
      while(ptr2!=NULL)
     {
-        if(ptr2->data.id == id )
+        if(ptr2->id == id )
         {
 
             break;
         }else
         {
-            ptr2 = ptr2->next;
+            ptr2 = ptr2->link;
         }
     }
 
-    printf("\nFor student : %s\n",ptr2->data.name);
-    printf("Password : %s\n",ptr2->data.pass);
-    printf("Age : %d\n",ptr2->data.age);
-    printf("Total grade : %d\n",ptr2->data.grade);
+    printf("\nFor student : %s\n",ptr2->name);
+    printf("Password : %s\n",ptr2->pass);
+    printf("Age : %d\n",ptr2->age);
+    printf("Total grade : %d\n",ptr2->grade);
 
  }
 //==========================================================================================================================================================/
-  void edit_name_func( struct node*ptr2,int id){
+  void edit_name_func( struct student_info *ptr2,int id){
     char newname[MAX_NAME_SIZE];
     while(ptr2!=NULL)
     {
-        if(ptr2->data.id == id )
+        if(ptr2->id == id )
         {
             break;
         }else
         {
-            ptr2 = ptr2->next;
+            ptr2 = ptr2->link;
         }}
         printf("\nEnter your new name : ");
         fflush(stdin);
         fgets(newname,sizeof(newname),stdin);
         newname[strlen(newname)-1]='\0';
-        strncpy(ptr2->data.name,newname,strlen(newname)+1);
+        strncpy(ptr2->name,newname,strlen(newname)+1);
 }
 //==========================================================================================================================================================/
-  void edit_pass_func( struct node *ptr2,int id){
+  void edit_pass_func( struct student_info *ptr2,int id){
     char newpassw[MAX_PASSWORD_SIZE];
     while(ptr2!=NULL)
     {
-        if(ptr2->data.id == id )
+        if(ptr2->id == id )
         {
             break;
         }else
         {
-            ptr2 = ptr2->next;
+            ptr2 = ptr2->link;
         }}
         printf("\nEnter your new password : ");
         fflush(stdin);
         fgets(newpassw,MAX_PASSWORD_SIZE,stdin);
         newpassw[strlen(newpassw)-1]='\0';
-        strncpy(ptr2->data.pass,newpassw,sizeof(newpassw));
+        strncpy(ptr2->pass,newpassw,sizeof(newpassw));
   }
 //==========================================================================================================================================================/
 
-int student()
+int student(struct student_info **linkedlist)
 {
-   struct node * linkedlist =NULL;
-   readFormFile(&linkedlist);
+
+   readFormFile(linkedlist);
 
    //=================inserting information from file.======================//
    printf("\t\t\t\t\t\t 'Student Mode' \n\n");
@@ -192,32 +184,88 @@ int student()
 
    }
    else{
-        int id= idcheck(linkedlist);
+        int id;
+        int num =0;
+        do{
+           id = id_pass_check(*linkedlist);
+           if(id != false)break;
+           num++;
+        }while(num < 3);
+
 
 
         while(1)
         {
     printf("Choose what you want to do:\n");
     printf(" 1-View your record\n 2-Edit your password\n 3-Edit your name\n 4-Quit program\n ");
+    printf("\nyour choice : ");
     scanf("%d",&option);
+    char op;
     switch(option){
     case 1:
 
-        viewfunc(linkedlist,id);
+        viewfunc(*linkedlist,id);
+        printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
         break;
     case 2:
-         //id= idcheck(linkedlist);
-        edit_pass_func(linkedlist,id);
-        savedata2(linkedlist);
+
+        edit_pass_func(*linkedlist,id);
+        int i = 0;
+       do{
+        printf("Would you like to save changes (y/n): ");
+        scanf("%c",&op);
+        int i = 0 ;
+        if(op =='y' || op=='Y')
+        {
+            save_data(*linkedlist);
+            break;
+        }
+        else if(op == 'n' || op == 'N') {
+                printf("\nDon't save changes \n");
+                break;}
+        else printf("invalid option..:( __Write (y/n)");
+        if(i==1)
+        {
+            printf("\nWrong .. Try in later time :(");
+        }
+        i++;
+        }while(i<2);
+        printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
         break;
     case 3:
-         //id= idcheck(linkedlist);
-        edit_name_func(linkedlist,id);
-        savedata2(linkedlist);
 
+        edit_name_func(*linkedlist,id);
+
+        do{
+        printf("Would you like to save changes (y/n): ");
+        scanf("%c",&op);
+         i = 0 ;
+        if(op =='y' || op=='Y')
+        {
+            save_data(*linkedlist);
+            break;
+        }
+        else if(op == 'n' || op == 'N')
+        {
+             printf("\nDon't save changes \n");
+            break;}
+        else printf("invalid option..:( __Write (y/n)");
+        if(i==1)
+        {
+            printf("\nWrong .. Try in later time :(");
+        }
+        i++;
+        }while(i<2);
+        printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
         break;
     case 4:
-        freeList(&linkedlist);
+        tofree(linkedlist);
         printf("\n\n\t\t\t\t\t\tDone!\n");
         exit(1);
         break;

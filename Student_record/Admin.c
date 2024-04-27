@@ -4,41 +4,14 @@
 #include<string.h>
 #include<stdio.h>
 #include<conio.h>
+#include"methods.h"
 
-
-enum {false,true}flag;
+enum {false,true};
 char default_pass[MAX_PASSWORD_SIZE] ="1234";
 
 static char *pass_admin;
 static int size_of_student = 0;
 
-int begin()
-{
-     printf("\n\n");
-    printf("\n\t\t\t        *************************************");
-    printf("\n\t\t\t        *               WELCOME             *");
-    printf("\n\t\t\t        *                  TO               *");
-    printf("\n\t\t\t        *            Student Record         *");
-    printf("\n\t\t\t        *              MANAGEMENT           *");
-    printf("\n\t\t\t        *                SYSTEM             *");
-    printf("\n\t\t\t        *************************************");
-    printf("\n\n");
-
-//printf("___________ Student Record System ___________");
-    printf("\n\nChoose your mode : \n");
-    printf("1- Admin mode \n");
-    printf("2- Student mode \n");
-    int choose;
-    do
-    {
-    printf("your choose : ");
-    scanf("%d",&choose);
-    if(choose!=1&&choose!=2)printf("Wrong number .. Try again :(\n");
-    else break;
-    }while(choose!=1&&choose!=2);
-
-    return choose;
-}
 
 void add_default_adminpass_infile()
 {
@@ -113,29 +86,7 @@ printf("\n\nHi admin \n");
 }
 
 
-int check(struct student_info *ptr,int id)
-{
-    if( ptr == NULL )
-    {
-        printf("\nThere isn't exist any student :(\n");
-        return 0;
-    }
-    int i = 1;
-    while(ptr!=NULL)
-    {
-        if(ptr->id == id )
-        {
-            return i;
-        }else
-        {
-            ptr = ptr->link;
-            i++;
-        }
-    }
-    return false;
-}
 
-//static int i = 0;
 
 void add_student(struct student_info **head)
 {
@@ -146,7 +97,7 @@ void add_student(struct student_info **head)
         *head = (struct student_info *)malloc(sizeof(struct student_info));
         (*head)->link = NULL;
         ptr = *head;
-    //i++;
+
     }else
     {
 
@@ -200,7 +151,7 @@ void add_student(struct student_info **head)
         scanf("%7s",ptr->gender);
         if(strcmp(ptr->gender,"male") && strcmp(ptr->gender,"female"))
         {
-            printf("wrong in your writing\n , Try again\n");
+            printf("\nwrong in your writing , Try again\n");
         }
         }while(strcmp(ptr->gender,"male") && strcmp(ptr->gender,"female"));
 
@@ -222,43 +173,6 @@ void add_student(struct student_info **head)
 }
 
 
-
-
-void view_student_record(struct student_info *ptr)
-{
-    if(size_of_student == 0)
-    {
-        printf("\nThere isn't exist any student :(\n");
-        return;
-    }
-    int id;
-    printf("enter ID : ");
-    scanf("%d",&id);
-   int ch = check(ptr,id);
-   if(ch > 0)
-   {
-    while(ptr!=NULL)
-    {
-        if(ptr->id == id )
-        {
-            break;
-        }else
-        {
-            ptr = ptr->link;
-        }
-    }
-
-    printf("\nFor student : %s\n",ptr->name);
-    printf("Password : %s\n",ptr->pass);
-    printf("Age : %d\n",ptr->age);
-    printf("Total grade : %d\n",ptr->grade);
-   }else
-   {
-       printf("\nThere isn't exist any student with this ID :(\n");
-       return;
-   }
-
-}
 
 
 void remove_student(struct student_info **head)
@@ -311,36 +225,7 @@ void remove_student(struct student_info **head)
     printf("\nDone removing\n");
 }
 
-void save_data(struct student_info *ptr)
-{
-    FILE *f_ptr = fopen("input.txt","w");
-    if(f_ptr==NULL)
-    {
-        printf("\nCan't open a file :(\n");
-        return;
-    }
-   // fprintf(f_ptr,"St info :name , password , ID , age , grade , gender .\n");
-    while(ptr!=NULL)
-    {
-        fprintf(f_ptr,"%s,%s,%d,%d,%s,%d\n",ptr->name,ptr->pass,ptr->id,ptr->age,ptr->gender,ptr->grade);
-        ptr = ptr->link;
-    }
-    fclose(f_ptr);
-    printf("\nDone saving\n");
-}
 
-void tofree(struct student_info **head)
-{
-    struct student_info *ptr = *head;
-    while (ptr!=NULL)
-{
-    ptr=ptr->link;
-    free(head);
-    *head = ptr;
-}
-head = NULL;
-ptr =NULL;
-}
 
 void ViewAllRecords(struct student_info *head){
    struct student_info* current = head;
@@ -432,15 +317,22 @@ void admin(struct student_info **head){
         switch(achoice){
         case 1:
             add_student(head);
+
             break;
         case 2:
             remove_student(head);
             break;
         case 3:
             view_student_record(*head);
+            printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
             break;
         case 4:
             ViewAllRecords(*head);
+            printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
             break;
         case 5:
             EditAdminPassword(head);
@@ -450,6 +342,9 @@ void admin(struct student_info **head){
             break;
         case 7:
            save_data(*head);
+           printf("\n\nPress any key to continue...\n");
+            getchar();
+            getchar();
            break;
         case 8:
             tofree(head);

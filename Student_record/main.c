@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include"student.h"
 #include"Admin.h"
+#include "methods.h"
 
 int main()
 {
@@ -21,7 +22,7 @@ int main()
      admin(&st);
      break;
     case 2:
-     student();
+     student(&st);
      break;
     }
 }
