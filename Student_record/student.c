@@ -10,7 +10,7 @@ static int check_ID,check_pass;
 
 //==========================================================================================================================================================/
 
-  struct student_info * insertnode(struct student_info **head){
+  struct student_info * insertnode(struct student_info **head){                          
     struct student_info *ptr = *head;
     if(*head == NULL)
     {
@@ -18,8 +18,8 @@ static int check_ID,check_pass;
         (*head)->link = NULL;
         ptr = *head;
 
-    }else
-    {
+    }else                                                                                         //Function to add new (struct student_info type) nodes
+    {                                                                                                            //to a new linked list.
 
      struct student_info *current = (struct student_info *)malloc(sizeof(struct student_info));
      current->link = NULL;
@@ -46,8 +46,8 @@ static int check_ID,check_pass;
 
    struct student_info *data;
    int id,age,grade;
-   char name[MAX_NAME_SIZE],pass[MAX_PASSWORD_SIZE];
-   char gender[10];
+   char name[MAX_NAME_SIZE],pass[MAX_PASSWORD_SIZE];                                                 //Function to read the informatio from our .txt file
+   char gender[10];                                                                                  //then store them into our perivious linked list.
    while(fscanf(file,"%51[^,],%11[^,],%d,%d,%9[^,],%d\n",name,pass,&id,&age,gender,&grade) != EOF){
      data = insertnode(head);
      data->id = id;
@@ -76,9 +76,9 @@ static int check_ID,check_pass;
     int i = 1;
     while(ptr!=NULL)
     {
-        if(!strcmp(ptr->pass,pass))
-        {
-            return true;
+        if(!strcmp(ptr->pass,pass))                                                               //Function to check the student password by accessing each 
+        {                                                                                        //node and compare between the two strings whether they are 
+            return true;                                                                                           //identical or not.
         }else
         {
             ptr = ptr->link;
@@ -87,7 +87,7 @@ static int check_ID,check_pass;
     }
     return false;
  }
-
+//=========================================================================================================================================================//
  int id_pass_check(struct student_info *head){
    int id;
     printf("\n\t\t\t        Enter your ID : ");
@@ -97,9 +97,9 @@ static int check_ID,check_pass;
         printf("\n\t\t\t        'Incorrect ID... Try again'\n ");
         return 0;
     }else
-    {
-      char pass[MAX_PASSWORD_SIZE];
-    printf("\n\t\t\t        Enter your password : ");
+    {                                                                  //Function to check the student ID,same as the perivious function(password check).
+      char pass[MAX_PASSWORD_SIZE];                                   //allowing the student to try several times.
+    printf("\n\t\t\t        Enter your password : ");                  
     scanf("%s",pass);
     check_pass = pass_check(head,pass);
     if(check_pass == true){
@@ -123,7 +123,7 @@ static int check_ID,check_pass;
             break;
         }else
         {
-            ptr2 = ptr2->link;
+            ptr2 = ptr2->link;                                    //Function to allow student to see his record ,after entering his own password and id.
         }
     }
     printf("\n\t\t\t        ***********\n");
@@ -142,7 +142,7 @@ static int check_ID,check_pass;
         {
             break;
         }else
-        {
+        {                                           //Function to allow student to edit his name , after entering his own password and id.
             ptr2 = ptr2->link;
         }}
         printf("\n\t\t\t       Enter your new name : ");
@@ -161,7 +161,7 @@ static int check_ID,check_pass;
             break;
         }else
         {
-            ptr2 = ptr2->link;
+            ptr2 = ptr2->link;                           //Function to allow student to edit his password, after entering his own old password and id.
         }}
         printf("\n\n\t\t\t       Enter your new password : ");
         fflush(stdin);
@@ -181,8 +181,9 @@ int student(struct student_info **linkedlist)
    if(linkedlist == NULL)
    {
        printf("\n\t\t\t       There are no students yet.\n");
-
-   }
+                                                                    //The main function in the student mode , which first collects the information then
+                                                                   //gives student diffrent options (Viewing record , Editing name ,Editing password )
+   }                                                              // and after this proccess ends, it saves new information according to the student's desire.
    else{
         int id;
         int num =0;
