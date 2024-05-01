@@ -123,7 +123,7 @@ static int check_ID,check_pass;
             break;
         }else
         {
-            ptr2 = ptr2->link;                                    //Function to allow student to see his record ,after entering his own password and id.
+            ptr2 = ptr2->link;                             //Function to allow student to see his record ,after entering his own password and id.
         }
     }
     printf("\n\t\t\t        ***********\n");
