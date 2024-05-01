@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include"student.h"
 #include"Admin.h"
-#include "methods.h"
+#include "common_fun.h"
 
 int main()
 {
@@ -26,4 +26,3 @@ int main()
      break;
     }
 }
-
