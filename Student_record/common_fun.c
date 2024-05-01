@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
-#include"methods.h"
+#include"common_fun.h"
 #include"student.h"
-
+#include"Admin.h"
 enum {false,true};
 
-int begin()
-{
+int begin()               //Our beginning function
+{                         //Which first gives the user the two modes option to choose from .
+
      printf("\n\n");
     printf("\n\t\t\t        *************************************");
     printf("\n\t\t\t        *               WELCOME             *");
@@ -19,27 +20,47 @@ int begin()
     printf("\n\n");
 
 //printf("___________ Student Record System ___________");
+    printf("\n\t\t\t        **********\n");
     printf("\n\nChoose your mode : \n");
-    printf("1- Admin mode \n");
-    printf("2- Student mode \n");
-    int choose;
+    printf("\n\t\t\t       1- Admin mode \n");
+    printf("\n\t\t\t       2- Student mode \n");
+    char choose[10];
     do
     {
-    printf("your choose : ");
-    scanf("%d",&choose);
-    if(choose!=1&&choose!=2)printf("Wrong number .. Try again :(\n");
+    printf("\n\t\t\t       your choose : \n\n");
+    fgets(choose,sizeof(choose),stdin);
+    choose[strlen(choose)-1]='\0';
+    //scanf(" %c",&choose);
+    if(strcmp(choose,"1")&&strcmp(choose,"2"))printf("\n\n\n\t\t       XXXXX Wrong number .. Try again :(XXXXX\n\n");
     else break;
-    }while(choose!=1&&choose!=2);
+    }while(strcmp(choose,"1")&&strcmp(choose,"2"));
 
-    return choose;
+    return atoi(choose);
 }
 
+int check_string(char * str){
+    for(int i =0;i<strlen(str);i++){
+        if(str[i] >='0' && str[i]<= '9'){
+            continue;                                 //Function to make sure that the input type doesn't have any character.
+        }
+        else return 0;
+    }
+    return 1;
+
+
+}
+
+
+//===============================================================================================
+
+//Function to check whether the input ID is existing or not.
+//(Accessing each node in the linked list).
 
 int check(struct student_info *ptr,int id)
 {
     if( ptr == NULL )
     {
-        printf("\nThere isn't exist any student :(\n");
+        printf("\n\t\t\t        There isn't exist any student :(\n\n");
         return 0;
     }
     int i = 1;
@@ -57,17 +78,33 @@ int check(struct student_info *ptr,int id)
     return false;
 }
 
+//===========================================================================================================
+
+// Function to view the student information by his ID.
+
 void view_student_record(struct student_info *ptr)
 {
     if(ptr == NULL)
     {
-        printf("\nThere isn't exist any student :(\n");
+        printf("\n\t\t\t        There isn't exist any student :(\n\n");
         return;
     }
-    int id;
-    printf("enter ID : ");
-    scanf("%d",&id);
-   int ch = check(ptr,id);
+     char string_id[20];
+            int id,ch;
+             printf("\n\t\t        Enter id: ");
+             printf("\n\t\t        ");
+             getchar();
+            fgets(string_id,sizeof(string_id),stdin);
+            string_id[strlen(string_id)-1]='\0';
+            if(check_string(string_id)){
+                id = atoi(string_id);
+                ch = check(ptr,id);
+
+            }
+            else {
+                printf("\n\t\t     ID should be integer ");
+                ch = -1;
+            }
    if(ch > 0)
    {
     while(ptr!=NULL)
@@ -81,13 +118,14 @@ void view_student_record(struct student_info *ptr)
         }
     }
 
-    printf("\nFor student : %s\n",ptr->name);
-    printf("Password : %s\n",ptr->pass);
-    printf("Age : %d\n",ptr->age);
-    printf("Total grade : %d\n",ptr->grade);
+     printf("\n\t\t\t        ***********\n");
+    printf("\n\t\t\t        For student : %s\n",ptr->name);
+    printf("\n\t\t\t        Password : %s\n",ptr->pass);
+    printf("\n\t\t\t        Age : %d\n",ptr->age);
+    printf("\n\t\t\t        Total grade : %d\n",ptr->grade);
    }else
    {
-       printf("\nThere isn't exist any student with this ID :(\n");
+       printf("\n\n\t\t\t        There isn't exist any student with this ID :(\n\n");
        return;
    }
 
@@ -95,10 +133,10 @@ void view_student_record(struct student_info *ptr)
 
 void save_data(struct student_info *ptr)
 {
-    FILE *f_ptr = fopen("input.txt","w");
+    FILE *f_ptr = fopen("input.txt","w");                      //Function to save all the information into a .txt file.
     if(f_ptr==NULL)
     {
-        printf("\nCan't open a file :(\n");
+        printf("\n\n\n\t\t\t        XXXXX can’t open the file (: XXXXX\n\n\n");
         return;
     }
 
@@ -111,6 +149,9 @@ void save_data(struct student_info *ptr)
     printf("\nDone saving\n");
 }
 
+//=====================================================================================================================
+
+//Function to delete unwanted nodes (or all the information in the linked list) to avoid memory leaks.
 
 void tofree(struct student_info **head) {
     struct student_info *current = *head;

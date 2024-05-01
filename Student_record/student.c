@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include<string.h>
 #include"student.h"
-#include"methods.h"
+#include"common_fun.h"
 
 enum {false,true};
 static int option,ID;
 static int check_ID,check_pass;
 
 //==========================================================================================================================================================/
+
+//Function to add new (struct student_info type) nodes to a new linked list.
 
   struct student_info * insertnode(struct student_info **head){
     struct student_info *ptr = *head;
@@ -35,11 +37,13 @@ static int check_ID,check_pass;
 
 //==========================================================================================================================================================/
 
+ //Function to read the informatio from our .txt file then store them into our perivious linked list.
+
   void readFormFile(struct student_info **head){
 
    FILE *file =fopen("input.txt","r");
    if(file ==NULL){
-    printf("Failed to open the file.\n");
+    printf("\n\n\n\t\t\t        XXXXX Failed to open the file.XXXXX\n\n\n");
      return;
    }
 
@@ -66,11 +70,15 @@ static int check_ID,check_pass;
   }
 
 //==========================================================================================================================================================/
+
+ /*Function to check the student password by accessing each
+ node and compare between the two strings whether they are identical or not.
+ */
  int pass_check(struct student_info *ptr,char *pass)
  {
      if( ptr == NULL )
     {
-        printf("\nThere isn't exist any student :(\n");
+        printf("\n\n\t\t\t   There isn't exist any student :(\n\n\n");
         return 0;
     }
     int i = 1;
@@ -88,32 +96,55 @@ static int check_ID,check_pass;
     return false;
  }
 
+//===================================================================================
+
+//Function to check the student ID,same as the perivious function(password check).
+//allowing the student to try several times
+
  int id_pass_check(struct student_info *head){
-   int id;
-    printf("Enter your ID : ");
-    scanf("%d",&id);
-    check_ID = check(head,id);
-    if( check_ID == false){
-        printf("\n 'Incorrect ID... Try again'\n ");
+    char string_id[20];
+
+            int id,ch;
+             printf("\n\t\t        Enter id: ");
+             printf("\n\t\t        ");
+             //getchar();
+            fgets(string_id,sizeof(string_id),stdin);
+            printf("%s ",string_id);
+            string_id[strlen(string_id)-1]='\0';
+            if(check_string(string_id)){
+                id = atoi(string_id);
+                ch = check(head,id);
+
+            }
+            else {
+                printf("\n\t\t     ID should be integer ");
+                ch = -1;
+            }
+
+    if( ch == false){
+        printf("\n\t\t\t        'Incorrect ID... Try again'\n ");
         return 0;
     }else
     {
       char pass[MAX_PASSWORD_SIZE];
-    printf("Enter your password : ");
+    printf("\n\t\t\t        Enter your password : ");
     scanf("%s",pass);
     check_pass = pass_check(head,pass);
     if(check_pass == true){
-        printf("\nDone login..\n\n");
+        printf("\n\t\t\t        Done login..\n\n");
         return id;
     }else
     {
-        printf("\n 'Incorrect password... Try again'\n ");
+        printf("\n\t\t\t        'Incorrect password... Try again'\n ");
         return false;}
 
     }
 
  }
 //==========================================================================================================================================================/
+
+ //Function to allow student to see his record ,after entering his own password and id.
+
  void viewfunc(struct student_info *ptr2,int id){
      while(ptr2!=NULL)
     {
@@ -126,14 +157,17 @@ static int check_ID,check_pass;
             ptr2 = ptr2->link;
         }
     }
-
-    printf("\nFor student : %s\n",ptr2->name);
-    printf("Password : %s\n",ptr2->pass);
-    printf("Age : %d\n",ptr2->age);
-    printf("Total grade : %d\n",ptr2->grade);
+    printf("\n\t\t\t        ***********\n");
+    printf("\n\t\t\t        For student : %s\n",ptr2->name);
+    printf("\n\t\t\t        Password : %s\n",ptr2->pass);
+    printf("\n\t\t\t        Age : %d\n",ptr2->age);
+    printf("\n\t\t\t        Total grade : %d\n",ptr2->grade);
 
  }
 //==========================================================================================================================================================/
+
+   //Function to allow student to edit his name , after entering his own password and id.
+
   void edit_name_func( struct student_info *ptr2,int id){
     char newname[MAX_NAME_SIZE];
     while(ptr2!=NULL)
@@ -145,13 +179,16 @@ static int check_ID,check_pass;
         {
             ptr2 = ptr2->link;
         }}
-        printf("\nEnter your new name : ");
+        printf("\n\t\t\t       Enter your new name : ");
         fflush(stdin);
         fgets(newname,sizeof(newname),stdin);
         newname[strlen(newname)-1]='\0';
         strncpy(ptr2->name,newname,strlen(newname)+1);
 }
 //==========================================================================================================================================================/
+
+ //Function to allow student to edit his password, after entering his own old password and id.
+
   void edit_pass_func( struct student_info *ptr2,int id){
     char newpassw[MAX_PASSWORD_SIZE];
     while(ptr2!=NULL)
@@ -163,13 +200,19 @@ static int check_ID,check_pass;
         {
             ptr2 = ptr2->link;
         }}
-        printf("\nEnter your new password : ");
+        printf("\n\n\t\t\t       Enter your new password : ");
         fflush(stdin);
         fgets(newpassw,MAX_PASSWORD_SIZE,stdin);
         newpassw[strlen(newpassw)-1]='\0';
         strncpy(ptr2->pass,newpassw,sizeof(newpassw));
   }
 //==========================================================================================================================================================/
+
+
+/*The main function in the student mode , which first collects the information then
+  gives student diffrent options (Viewing record , Editing name ,Editing password )
+ and after this proccess ends, it saves new information according to the student's desire
+*/
 
 int student(struct student_info **linkedlist)
 {
@@ -178,9 +221,9 @@ int student(struct student_info **linkedlist)
 
    //=================inserting information from file.======================//
    printf("\t\t\t\t\t\t 'Student Mode' \n\n");
-   if(linkedlist == NULL)
+   if(*linkedlist == NULL)
    {
-       printf("There are no students yet.\n");
+       printf("\n\t\t\t       There are no students yet.\n");
 
    }
    else{
@@ -196,16 +239,17 @@ int student(struct student_info **linkedlist)
 
         while(1)
         {
+    printf("\n\t\t\t        ************\n");
     printf("Choose what you want to do:\n");
-    printf(" 1-View your record\n 2-Edit your password\n 3-Edit your name\n 4-Quit program\n ");
-    printf("\nyour choice : ");
+    printf("\n\t\t\t      1-View your record \n\t\t\t      2-Edit your password\n\t\t\t      3-Edit your name\n\t\t\t      4-Quit program\n ");
+    printf("\n\t\t\t       your choice : ");
     scanf("%d",&option);
     char op;
     switch(option){
     case 1:
 
         viewfunc(*linkedlist,id);
-        printf("\n\nPress any key to continue...\n");
+        printf("\n\n\t\t\t   Press any key to continue...\n");
             getchar();
             getchar();
         break;
@@ -214,7 +258,7 @@ int student(struct student_info **linkedlist)
         edit_pass_func(*linkedlist,id);
         int i = 0;
        do{
-        printf("Would you like to save changes (y/n): ");
+        printf("\n\n\t\t\t   Would you like to save changes (y/n): \n ");
         scanf("%c",&op);
         int i = 0 ;
         if(op =='y' || op=='Y')
@@ -223,16 +267,16 @@ int student(struct student_info **linkedlist)
             break;
         }
         else if(op == 'n' || op == 'N') {
-                printf("\nDon't save changes \n");
+                printf("\n\n\t\t\t    Don't save changes \n");
                 break;}
-        else printf("invalid option..:( __Write (y/n)");
+        else printf("\n\n\n\t\t\t        XXXXX invalid option..:( __Write (y/n)XXXXX\n\n\n");
         if(i==1)
         {
-            printf("\nWrong .. Try in later time :(");
+            printf("\n\n\n\t\t\t        XXXXX Wrong .. Try in later time :(XXXXX\n\n\n");
         }
         i++;
         }while(i<2);
-        printf("\n\nPress any key to continue...\n");
+        printf("\n\n\t\t\t     Press any key to continue...\n");
             getchar();
             getchar();
         break;
@@ -241,7 +285,7 @@ int student(struct student_info **linkedlist)
         edit_name_func(*linkedlist,id);
 
         do{
-        printf("Would you like to save changes (y/n): ");
+        printf("\n\n\t\t\t    Would you like to save changes (y/n): \n");
         scanf("%c",&op);
          i = 0 ;
         if(op =='y' || op=='Y')
@@ -251,26 +295,26 @@ int student(struct student_info **linkedlist)
         }
         else if(op == 'n' || op == 'N')
         {
-             printf("\nDon't save changes \n");
+             printf("\n\n\t\t\t    Don't save changes \n");
             break;}
-        else printf("invalid option..:( __Write (y/n)");
+        else printf("\n\n\n\t\t\t        XXXXX invalid option..:( __Write (y/n)XXXXX\n\n\n");
         if(i==1)
         {
-            printf("\nWrong .. Try in later time :(");
+            printf("\n\n\n\t\t\t        XXXXX Wrong .. Try in later time :(XXXXX\n\n\n");
         }
         i++;
         }while(i<2);
-        printf("\n\nPress any key to continue...\n");
+        printf("\n\n\t\t\t     Press any key to continue...\n");
             getchar();
             getchar();
         break;
     case 4:
         tofree(linkedlist);
-        printf("\n\n\t\t\t\t\t\tDone!\n");
+        printf("\n\n\t\t\t\t\t\t  Done!\n");
         exit(1);
         break;
     default:
-        printf("\nWrong choice..Try again:(\n");
+        printf("\n\n\n\t\t\t        XXXXX Wrong choice..Try again:(XXXXX\n\n\n");
 
     }
 
