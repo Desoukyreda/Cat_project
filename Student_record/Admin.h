@@ -3,7 +3,7 @@
 
 
 int login();
-int check_string(char*);
+
 void add_student(struct student_info **);
 
 void remove_student(struct student_info ** );
